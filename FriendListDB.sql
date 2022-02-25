@@ -1,83 +1,99 @@
-CREATE TABLE Friends (
+CREATE TABLE friend(
         friend_ID INT AUTO_INCREMENT,
         name VARCHAR(20) NOT NULL,
         lastName VARCHAR(20) DEFAULT "Unknown",
-        sex VARCHAR(10) DEFAULT 'undecided',
-        age INT DEFAULT NULL,
+        sex VARCHAR(1) DEFAULT 'd',
         birthDate DATE DEFAULT '2000-01-01',
-        primary_Hobby VARCHAR(20),
-        secondary_Hobby VARCHAR(20),
-        primary_Interest VARCHAR(30),
-        secondary_Interest VARCHAR(30),
-        occupation VARCHAR(20) DEFAULT 'student',
+        occupation_ID INT,
         adress VARCHAR(30),
         vacation_Budget INT DEFAULT 0,
-        favorite_Vacation VARCHAR(20),
-        secondary_Vacation VARCHAR(20),
         future_Dream VARCHAR(50),
         PRIMARY KEY(friend_ID)
 );
-CREATE TABLE Hobbies(
+CREATE TABLE hobby(
+        hobby_ID INT AUTO_INCREMENT,
         hobby_Name VARCHAR(20) NOT NULL,
         hobby_Description VARCHAR(200),
         hobby_Monthly_Cost INT,
-        PRIMARY KEY(hobby_Name)
+        PRIMARY KEY(hobby_ID)
 );
-CREATE TABLE Interests(
+CREATE TABLE interest(
+        interest_ID INT AUTO_INCREMENT,
         interest_Name VARCHAR(30),
         interest_Description VARCHAR(200),
-        PRIMARY KEY(interest_Name)
+        PRIMARY KEY(interest_ID)
 );
-CREATE TABLE Occupations(
+CREATE TABLE occupation(
+        occupation_ID INT AUTO_INCREMENT,
         occupation_Name VARCHAR(20),
         occupation_Description VARCHAR(200),
         occupation_Average_Salary INT,
-        PRIMARY KEY(occupation_Name)
+        PRIMARY KEY(occupation_ID)
 );
-CREATE TABLE Vacation_Spots(
+CREATE TABLE vacation(
+        vacation_ID INT AUTO_INCREMENT,
         vacation_Name VARCHAR(20),
         vacation_Type VARCHAR(50),
         vacation_Address VARCHAR(30),
         vacation_Cost INT,
-        PRIMARY KEY(vacation_Name)
+        PRIMARY KEY(vacation_ID)
 );
-ALTER TABLE friends 
-ADD FOREIGN KEY(primary_Hobby) 
-REFERENCES hobbies(hobby_Name) 
-ON DELETE SET NULL,
-ADD FOREIGN KEY(secondary_Hobby)
-REFERENCES hobbies(hobby_Name)
-ON DELETE SET NULL,
-ADD FOREIGN KEY(primary_Interest)
-REFERENCES Interests(interest_Name)
-ON DELETE SET NULL,
-ADD FOREIGN KEY(secondary_Interest)
-REFERENCES Interests(interest_Name)
-ON DELETE SET NULL,
-ADD FOREIGN KEY(occupation)
-REFERENCES Occupations(occupation_Name)
-ON DELETE SET NULL,
-ADD FOREIGN KEY(favorite_Vacation)
-REFERENCES Vacation_Spots(vacation_Name)
-ON DELETE SET NULL,
-ADD FOREIGN KEY(secondary_Vacation)
-REFERENCES Vacation_Spots(vacation_Name)
+CREATE TABLE friend_hobbies(
+        friend_ID INT,
+        hobby_ID INT,
+        PRIMARY KEY(friend_ID, hobby_ID),
+        FOREIGN KEY(friend_ID) REFERENCES friend(friend_ID)
+        ON DELETE CASCADE,
+        FOREIGN KEY(hobby_ID) REFERENCES hobby(hobby_ID)
+        ON DELETE CASCADE
+);
+CREATE TABLE friend_interests(
+        friend_ID INT,
+        interest_ID INT,
+        PRIMARY KEY(friend_ID, interest_ID),
+        FOREIGN KEY(friend_ID) REFERENCES friend(friend_ID)
+        ON DELETE CASCADE,
+        FOREIGN KEY(interest_ID) REFERENCES interest(interest_ID)
+        ON DELETE CASCADE
+);
+CREATE TABLE friend_vacation(
+        friend_ID INT,
+        vacation_ID INT,
+        PRIMARY KEY(friend_ID, vacation_ID),
+        FOREIGN KEY(friend_ID) REFERENCES friend(friend_ID)
+        ON DELETE CASCADE,
+        FOREIGN KEY(vacation_ID) REFERENCES vacation(vacation_ID)
+        ON DELETE CASCADE
+);
+ALTER TABLE friend
+ADD FOREIGN KEY(occupation_ID)
+REFERENCES occupation(occupation_ID)
 ON DELETE SET NULL;
 
 
 
 
 
-
-/*The most simple and useful Commands for SQL to know if your Tables are actually as you want them. */
-DESCRIBE friends;
-ALTER TABLE friends ADD favoriteColor VARCHAR(10) DEFAULT "unknown";
-INSERT INTO friends VALUES(1, 'Max', 'Tester', 21, '2001-01-25', 'black');   
-INSERT INTO friends (name, lastName, age, birthDate) VALUES('Anna', 'Storch', 22, '2000-01-05');
-UPDATE friends
+/*The most simple and useful Commands for SQL to work with tables*/
+DESCRIBE friend;
+ALTER TABLE friend ADD favoriteColor VARCHAR(10) DEFAULT "unknown";
+INSERT INTO friend VALUES(1, 'Max', 'Tester', 21, '2001-01-25', 'black');   
+INSERT INTO friend (name, lastName, age, birthDate) VALUES('Anna', 'Storch', 22, '2000-01-05');
+UPDATE friend
 SET name = 'Alex'
 WHERE friendID = 1;
-DELETE from friends
+DELETE from friend
 WHERE friendID = 2;
-SELECT * FROM friends;
-DROP TABLE friends;
+SELECT * FROM friend;
+SELECT name 
+FROM friend
+WHERE friend_id IN (
+        SELECT friend_ID 
+        FROM friend_hobbies
+        WHERE hobby_ID = (
+                SELECT hobby_ID
+                FROM hobby
+                WHERE hobby_name = "Minecraft"
+        );
+); /* Nested Query where you get the names of the friends who have the hobby which is named "Minecraft" */
+DROP TABLE friend;
