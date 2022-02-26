@@ -5,7 +5,7 @@ CREATE TABLE friend(
         sex VARCHAR(1) DEFAULT 'd',
         birthDate DATE DEFAULT '2000-01-01',
         occupation_ID INT,
-        adress VARCHAR(30),
+        address VARCHAR(30),
         vacation_Budget INT DEFAULT 0,
         future_Dream VARCHAR(50),
         PRIMARY KEY(friend_ID)
@@ -77,8 +77,10 @@ ON DELETE SET NULL;
 /*The most simple and useful Commands for SQL to work with tables*/
 DESCRIBE friend;
 ALTER TABLE friend ADD favoriteColor VARCHAR(10) DEFAULT "unknown";
-INSERT INTO friend VALUES(1, 'Max', 'Tester', 21, '2001-01-25', 'black');   
-INSERT INTO friend (name, lastName, age, birthDate) VALUES('Anna', 'Storch', 22, '2000-01-05');
+INSERT INTO friend 
+VALUES(1, 'Max', 'Tester', 'M', '2001-01-25', 0, 'Mustermannstraße 6', 300, 'Wants to travel the world');   
+INSERT INTO friend (name, lastName, sex, birthDate, occupation_ID, address, vacation_Budget, future_Dream) 
+VALUES('Anna', 'Storch', 'F', '2000-01-05', 1, 'Mustermann Allee 13', 450, 'Wants to eat the best food in the world.');
 UPDATE friend
 SET name = 'Alex'
 WHERE friendID = 1;
