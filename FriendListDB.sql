@@ -7,7 +7,7 @@ CREATE TABLE friend(
         occupation_ID INT,
         address VARCHAR(30),
         vacation_Budget INT DEFAULT 0,
-        future_Dream VARCHAR(50),
+        future_Dream VARCHAR(200),
         PRIMARY KEY(friend_ID)
 );
 CREATE TABLE hobby(
@@ -99,3 +99,5 @@ WHERE friend_id IN (
         );
 ); /* Nested Query where you get the names of the friends who have the hobby which is named "Minecraft" */
 DROP TABLE friend;
+ALTER TABLE friend
+MODIFY COLUMN future_Dream VARCHAR(200);
