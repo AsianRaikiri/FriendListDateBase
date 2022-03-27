@@ -1,7 +1,4 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class MyFriendListInput {
         public void FriendInput(String name, String lastName, String sex, String birthDate,
@@ -11,13 +8,19 @@ public class MyFriendListInput {
                 String password = "1234567";
                 String delim = ", ";
                 String query = "INSERT INTO friend (name, lastName, sex, birthDate, occupation_ID, " +
-                               "address, vacation_Budget, future_Dream) VALUES(";
-                query += name + delim + lastName + delim + sex + delim + birthDate + delim + occupation_ID + delim +
-                         address + delim + vacation_Budget + delim + future_Dream + ");";
+                               "address, vacation_Budget, future_Dream) VALUES(?, ?, ?, ?, ?, ?, ?, ?); ";
                 try {
                         Connection connection = DriverManager.getConnection(url, user, password);
-                        Statement statement = connection.createStatement();
-                        ResultSet resultSet = statement.executeQuery(query);
+                        PreparedStatement statement = connection.prepareStatement(query);
+                        statement.setString(1, name);
+                        statement.setString(2, lastName);
+                        statement.setString(3, sex);
+                        statement.setString(4, birthDate);
+                        statement.setInt(5, occupation_ID);
+                        statement.setString(6, address);
+                        statement.setInt(7, vacation_Budget);
+                        statement.setString(8, future_Dream);
+                       statement.executeUpdate();
                 }catch(Exception e){
                         e.printStackTrace();
                 }

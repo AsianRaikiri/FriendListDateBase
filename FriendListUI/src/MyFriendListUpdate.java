@@ -1,18 +1,17 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class MyFriendListUpdate {
     public void FriendUpdateName(int friendID, String newName){
         String url = "jdbc:mysql://localhost:3306/MyFriendList";
         String user = "JavaUser";
         String password = "1234567";
-        String query = "UPDATE friend SET name = " + newName + "WHERE friend_ID  " + friendID + ";";
+        String query = "UPDATE friend SET name = ? WHERE friend_ID = ? ;";
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, newName);
+            statement.setInt(2, friendID);
+            statement.executeUpdate();
         }catch(Exception e) {
             e.printStackTrace();
         }
